@@ -1,0 +1,41 @@
+setwd('C:\\Users\\L03052618\\Documents\\1. Redes\\Datos completos 28Oct')
+vars <- read.csv('Network Factor Analysis.csv')
+
+# principal component analysis
+comps <- princomp(vars, cor=TRUE)
+comps <- princomp(vars, cor=FALSE)
+print(comps)
+summary(comps)
+loadings(comps)
+plot(comps, type = "lines")
+comps$scores
+biplot(comps)
+# No sé cómo interpretar los resultados :() jajaja, automáticamente cerró 
+# los corchetes.
+
+
+# otra vez solo con variables normalizados
+vars2 <- vars[,1:4]
+comps2 <- princomp(vars2, cor = TRUE)
+print(comps2)
+summary(comps2)
+loadings(comps2)
+plot(comps2, type = "lines")
+comps2$scores
+biplot(comps2)
+
+# ahora factor analysis
+fact <- factanal(vars2, 1, rotation = 'varimax')
+print(fact, digits = 2, cutoff = 0.3, sort = FALSE)
+summary(fact)
+preplot <- fact$loadings[,1]
+plot(preplot, type = 'n', main = 'Factor Analysis: Four Variables, One Factor', 
+     ylab = 'Loadings (I think these are the loads)',
+     xlab = 'Index (What does this axis represent?)')
+text(preplot, labels = names(vars2))
+
+# 2 factors are too many for 4 variables
+fact <- factanal(vars, 2, rotation = "varimax", optim(method = "BFGS"))
+
+library(psych)
+fact <- factor.pa(vars, nfactors = 2)
